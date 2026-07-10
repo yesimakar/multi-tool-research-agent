@@ -116,12 +116,6 @@ Node.js 18+ is required because the project uses native `fetch`.
 
 ## Setup
 
-Clone the repository:
-
-```bash
-git clone git@github.com:yesimakar/multi-tool-research-agent.git
-cd multi-tool-research-agent
-```
 
 Install dependencies:
 
