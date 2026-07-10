@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Runtime output
+reports/*
+!reports/.gitkeep
+scheduler.log
+*.log
+
+# Claude Code / local agent state
+.claude/
+
+# Build / coverage / caches
+coverage/
+.nyc_output/
+dist/
+build/
+.cache/
+.tmp/
+tmp/
+
+# Node / npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.swp
+*.swo

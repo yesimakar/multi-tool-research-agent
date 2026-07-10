@@ -1,0 +1,15 @@
+{
+  "name": "multi-tool-research-agent",
+  "version": "1.0.0",
+  "description": "A Node.js AI agent powered by Claude, using tool calling in an agentic loop.",
+  "type": "module",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "scheduler": "node scheduler/daily.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "dotenv": "^17.4.2"
+  }
+}
