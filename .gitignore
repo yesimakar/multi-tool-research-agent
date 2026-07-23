@@ -12,8 +12,10 @@ reports/*
 scheduler.log
 *.log
 
-# Claude Code / local agent state
+# Claude Code / local AI assistant workspace files
 .claude/
+CLAUDE.md
+skills/
 
 # Build / coverage / caches
 coverage/

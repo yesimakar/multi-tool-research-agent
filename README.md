@@ -90,10 +90,6 @@ multi-tool-research-agent/
 │   └── .gitkeep                      # Keeps reports directory in Git
 ├── skills/
 │   └── task-execution/SKILL.md       # Claude Code skill for task execution
-├── .claude/
-│   ├── agents/code-reviewer.md       # Claude Code review agent
-│   └── rules/                        # Claude Code project rules
-├── CLAUDE.md                         # Claude Code project instructions
 ├── .env.example                      # Environment variable template
 ├── .gitignore
 ├── package.json
