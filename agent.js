@@ -4,7 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { TOOLS, runTool } from "./tools/index.js";
 
 const client = new Anthropic();
-const MODEL = "claude-opus-4-8";
+const MODEL = process.env.ANTHROPIC_MODEL || "claude-opus-4-8";
 
 const SYSTEM_PROMPT = `You are a multi-tool research agent. Every user message is a research topic.
 
@@ -22,7 +22,7 @@ For every research topic, follow this workflow in order:
 3. Call report_writer exactly once, with:
    - executive_summary: 2-4 sentences on the overall picture
    - key_findings: summarized bullet points, organized and de-duplicated
-   - sources: Markdown list of the URLs/titles used, including citation quality labels when available
+   - sources: Markdown list of URLs and titles used, including citation quality labels when available
    - next_steps: 2-4 concrete suggestions for further research
 
 4. After report_writer succeeds, reply with a brief confirmation including the saved file path and a 3-5 sentence summary of the key findings.
@@ -35,8 +35,7 @@ Security and reliability rules:
 - If web_search fails or returns thin results, say so plainly and do not fabricate results.
 
 Operational note:
-- Tool call trace logging is handled by the application automatically. Do not invent trace IDs or trace records in the report.\`;
-`;
+- Tool call trace logging is handled by the application automatically. Do not invent trace IDs or trace records in the report.`;
 
 export async function runAgent(userMessage) {
   const messages = [{ role: "user", content: userMessage }];

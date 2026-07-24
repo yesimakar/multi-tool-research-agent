@@ -2,9 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic();
 
-// Cheaper/faster than the orchestrator model — summarization is a bounded,
-// low-stakes sub-task and doesn't need the main model's budget.
-const SUMMARIZER_MODEL = "claude-haiku-4-5-20251001";
+const SUMMARIZER_MODEL =
+  process.env.ANTHROPIC_SUMMARIZER_MODEL || "claude-haiku-4-5-20251001";
 
 export async function summarize(text, topic) {
   if (!text || !text.trim()) {

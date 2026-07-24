@@ -13,7 +13,7 @@ const RESEARCH_PROMPT = process.env.DAILY_PROMPT || DAILY_TOPIC;
 async function todaysReportExists(dateStr) {
   await mkdir(REPORTS_DIR, { recursive: true });
   const files = await readdir(REPORTS_DIR);
-  return files.some((f) => f.startsWith(dateStr) && f.endsWith(".md"));
+  return files.some((file) => file.startsWith(dateStr) && file.endsWith(".md"));
 }
 
 async function main() {
@@ -29,6 +29,7 @@ async function main() {
 
   let finalMessage;
   let failed = false;
+
   try {
     finalMessage = await runAgent(RESEARCH_PROMPT);
   } catch (err) {
@@ -38,13 +39,10 @@ async function main() {
 
   console.log(`[scheduler] Agent response:\n${finalMessage}`);
 
-  // Safety net: the agent's report_writer tool call should have already
-  // saved the real report. If it didn't (error, or the model skipped the
-  // tool), don't fail silently — write down what we know.
   if (failed || !(await todaysReportExists(dateStr))) {
     const fallbackPath = path.join(REPORTS_DIR, `${dateStr}-scheduler-fallback.md`);
     const content = [
-      `# Scheduler Fallback Report — ${dateStr}`,
+      `# Scheduler Fallback Report - ${dateStr}`,
       "",
       `Generated: ${now.toISOString()}`,
       `Status: ${failed ? "FAILED" : "no report_writer call detected"}`,
@@ -57,7 +55,10 @@ async function main() {
     ].join("\n");
     await writeFile(fallbackPath, content, "utf8");
     console.log(`[scheduler] Fallback report saved to ${fallbackPath}`);
-    if (failed) process.exitCode = 1;
+
+    if (failed) {
+      process.exitCode = 1;
+    }
   }
 }
 

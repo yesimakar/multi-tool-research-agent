@@ -19,7 +19,7 @@ export const TOOLS = [
         },
         count: {
           type: "integer",
-          description: "Number of results to return (1-10). Defaults to 5.",
+          description: "Number of results to return, from 1 to 10. Defaults to 5.",
         },
       },
       required: ["query"],
@@ -28,7 +28,7 @@ export const TOOLS = [
   {
     name: "summarizer",
     description:
-      "Summarize a block of text, such as ranked search result snippets, into concise key bullet points. " +
+      "Summarize a block of research text into concise key bullet points. " +
       "Always run collected search results through this before writing a report.",
     input_schema: {
       type: "object",
@@ -68,7 +68,7 @@ export const TOOLS = [
         sources: {
           type: "string",
           description:
-            "Markdown-formatted list of sources/URLs used. Include citation quality labels when available.",
+            "Markdown-formatted list of sources and URLs used. Include citation quality labels when available.",
         },
         next_steps: {
           type: "string",

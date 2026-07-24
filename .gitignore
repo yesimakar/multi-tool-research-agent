@@ -1,3 +1,4 @@
+cat > .gitignore <<'EOF'
 # Dependencies
 node_modules/
 
@@ -6,12 +7,10 @@ node_modules/
 .env.*
 !.env.example
 
-# Tool trace logs
-logs/
-
 # Runtime output
 reports/*
 !reports/.gitkeep
+logs/
 scheduler.log
 *.log
 
@@ -46,3 +45,4 @@ Thumbs.db
 # Misc
 *.swp
 *.swo
+EOF
