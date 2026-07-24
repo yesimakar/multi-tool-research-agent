@@ -103,10 +103,12 @@ flowchart LR
 multi-tool-research-agent/
 ├── agent.js                         # Main agent loop and CLI entrypoint
 ├── tools/
-│   ├── index.js                      # Tool schemas and dispatcher
-│   ├── webSearch.js                  # DuckDuckGo Instant Answer API tool
+│   ├── index.js                      # Tool schemas, dispatcher, and trace wrapper
+│   ├── webSearch.js                  # DuckDuckGo Instant Answer API search tool
+│   ├── sourceQuality.js              # Source ranking and citation quality scoring
 │   ├── summarizer.js                 # Claude-powered summarization tool
-│   └── reportWriter.js               # Markdown report writer
+│   ├── reportWriter.js               # Markdown report writer
+│   └── traceLogger.js                # JSONL trace logger for tool calls
 ├── scheduler/
 │   └── daily.js                      # One-shot daily research job
 ├── reports/
@@ -208,7 +210,16 @@ DAILY_TOPIC=latest developments in AI governance
 
 ### `web_search`
 
-Searches DuckDuckGo's Instant Answer API and returns formatted result snippets.
+Searches DuckDuckGo's Instant Answer API and returns ranked source snippets with citation quality metadata.
+
+Each returned source includes:
+
+- Title
+- URL
+- Description
+- Citation quality label
+- Citation quality score
+- Quality-check reasons
 
 Important limitation: DuckDuckGo Instant Answer is not a full general-purpose web search API. It works best for known topics, entities, and concepts. For breaking news or broad web search, results may be thin.
 
