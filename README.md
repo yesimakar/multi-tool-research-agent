@@ -1,39 +1,59 @@
 # Multi-Tool Research Agent
 
-A Node.js research agent that uses Claude tool calling to search for information, summarize findings, and write structured Markdown research reports.
+A lightweight Node.js AI agent that demonstrates tool orchestration, web research, summarization, and structured report generation using Claude tool calling.
 
-The project is intentionally framework-light: it uses the Anthropic SDK, modular JavaScript tools, a small agent loop, and a file-based report output workflow. It is designed to show how an LLM can coordinate multiple tools while the application keeps the tool logic explicit, reviewable, and easy to extend.
+The project is intentionally framework-light: it uses the Anthropic SDK, modular JavaScript tools, a small agent loop, and a file-based report output workflow. It is designed to show how an LLM-powered application can keep tool logic explicit, auditable, and easy to extend instead of hiding orchestration behind a heavy framework.
+
+---
+
+## What This Demonstrates
+
+This project demonstrates several production-relevant AI engineering patterns:
+
+- LLM tool orchestration with explicit tool schemas
+- Separation between model reasoning and application-owned tool execution
+- Modular tool design for search, summarization, and report writing
+- File-based output workflow for auditable generated artifacts
+- Local secret management using environment variables
+- Safety-aware handling of external web content
+- A framework-light architecture that is easy to inspect, test, and extend
 
 ---
 
 ## Features
 
 - Claude-powered agent loop using the Anthropic SDK
-- Modular tool registry with explicit tool schemas
+- Modular JavaScript tool registry with explicit tool schemas
 - Web search tool using DuckDuckGo Instant Answer API
-- Summarization tool using a smaller Claude model for bounded summarization work
+- Dedicated summarization tool for bounded, auditable summarization
 - Report writer tool that saves structured Markdown reports
-- Optional one-shot daily scheduler script
-- Claude Code project context through `CLAUDE.md`, `.claude/rules/`, and custom skills
+- Optional one-shot daily research scheduler
 - Local `.env` configuration for API keys and scheduler settings
-
+- File-based report workflow designed for easy review, debugging, and extension
 ---
 
 ## Architecture
 
 ```mermaid
-flowchart TD
-    A[User Research Topic] --> B[agent.js]
-    B --> C[Claude Orchestrator Model]
-    C -->|tool_use: web_search| D[tools/webSearch.js]
-    D --> E[DuckDuckGo Instant Answer API]
-    E --> B
-    C -->|tool_use: summarizer| F[tools/summarizer.js]
-    F --> G[Claude Summarizer Model]
-    G --> B
-    C -->|tool_use: report_writer| H[tools/reportWriter.js]
-    H --> I[reports/YYYY-MM-DD-topic.md]
-    B --> J[Final Console Response]
+flowchart LR
+    User[Research Topic] --> Agent[agent.js<br/>Agent Orchestrator]
+
+    Agent --> Claude[Claude Tool-Calling Model]
+    Claude --> Registry[tools/index.js<br/>Tool Registry]
+
+    Registry --> Search[webSearch.js<br/>Web Search]
+    Registry --> Summarizer[summarizer.js<br/>Summarization]
+    Registry --> Writer[reportWriter.js<br/>Report Writer]
+
+    Search --> DuckDuckGo[DuckDuckGo<br/>Instant Answer API]
+    DuckDuckGo --> Search
+
+    Search --> Summarizer
+    Summarizer --> Writer
+    Writer --> Report[reports/YYYY-MM-DD-topic-slug.md]
+
+    Report --> Agent
+    Agent --> Console[Final Console Response]
 ```
 
 ---
@@ -76,6 +96,8 @@ flowchart TD
 
 ## Project Structure
 
+## Project Structure
+
 ```text
 multi-tool-research-agent/
 ├── agent.js                         # Main agent loop and CLI entrypoint
@@ -88,8 +110,6 @@ multi-tool-research-agent/
 │   └── daily.js                      # One-shot daily research job
 ├── reports/
 │   └── .gitkeep                      # Keeps reports directory in Git
-├── skills/
-│   └── task-execution/SKILL.md       # Claude Code skill for task execution
 ├── .env.example                      # Environment variable template
 ├── .gitignore
 ├── package.json
@@ -97,7 +117,6 @@ multi-tool-research-agent/
 ├── LICENSE
 └── README.md
 ```
-
 ---
 
 ## Prerequisites
@@ -218,6 +237,19 @@ reports/YYYY-MM-DD-topic-slug.md
 ```
 
 Generated reports are ignored by Git so local research output does not get committed accidentally. The repository keeps `reports/.gitkeep` so the directory exists after cloning.
+
+---
+
+## Possible Future Improvements
+
+- Add a stronger search provider with richer result metadata
+- Add retry and timeout handling for tool execution
+- Store reports and run history in PostgreSQL
+- Add trace logging for each tool call
+- Add source ranking and citation quality checks
+- Add a lightweight web dashboard for report review
+- Add tests for tool dispatching and report generation
+- Add Docker support for reproducible local execution
 
 ---
 
