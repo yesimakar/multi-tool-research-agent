@@ -30,6 +30,9 @@ This project demonstrates several production-relevant AI engineering patterns:
 - Optional one-shot daily research scheduler
 - Local `.env` configuration for API keys and scheduler settings
 - File-based report workflow designed for easy review, debugging, and extension
+- Tool-call trace logging to local JSONL files for debugging and auditability
+- Source ranking and citation quality checks for search results
+
 ---
 
 ## Architecture
@@ -93,8 +96,6 @@ flowchart LR
    The final console response confirms where the report was saved and summarizes the result.
 
 ---
-
-## Project Structure
 
 ## Project Structure
 
@@ -245,8 +246,6 @@ Generated reports are ignored by Git so local research output does not get commi
 - Add a stronger search provider with richer result metadata
 - Add retry and timeout handling for tool execution
 - Store reports and run history in PostgreSQL
-- Add trace logging for each tool call
-- Add source ranking and citation quality checks
 - Add a lightweight web dashboard for report review
 - Add tests for tool dispatching and report generation
 - Add Docker support for reproducible local execution

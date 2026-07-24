@@ -8,8 +8,7 @@ export const TOOLS = [
   {
     name: "web_search",
     description:
-      "Search the web for a query and return ranked sources with citation quality checks. " +
-      "Use this to gather current information on a research topic.",
+      "Search the web for a query and return ranked sources with citation quality checks. Use this to gather current information on a research topic.",
     input_schema: {
       type: "object",
       properties: {
@@ -28,8 +27,7 @@ export const TOOLS = [
   {
     name: "summarizer",
     description:
-      "Summarize a block of research text into concise key bullet points. " +
-      "Always run collected search results through this before writing a report.",
+      "Summarize a block of research text into concise key bullet points. Always run collected search results through this before writing a report.",
     input_schema: {
       type: "object",
       properties: {
@@ -48,8 +46,7 @@ export const TOOLS = [
   {
     name: "report_writer",
     description:
-      "Write a structured Markdown research report with Executive Summary, Key Findings, Sources, " +
-      "and Next Steps, then save it to reports/YYYY-MM-DD-{topic}.md.",
+      "Write a structured Markdown research report with Executive Summary, Key Findings, Sources, and Next Steps, then save it to reports/YYYY-MM-DD-{topic}.md.",
     input_schema: {
       type: "object",
       properties: {
