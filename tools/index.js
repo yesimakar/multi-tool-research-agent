@@ -1,17 +1,22 @@
+import { randomUUID } from "node:crypto";
 import { webSearch } from "./webSearch.js";
 import { summarize } from "./summarizer.js";
 import { writeReport } from "./reportWriter.js";
+import { logToolCall } from "./traceLogger.js";
 
 export const TOOLS = [
   {
     name: "web_search",
     description:
-      "Search the web for a query and return the top results (title, URL, description). " +
+      "Search the web for a query and return ranked sources with citation quality checks. " +
       "Use this to gather current information on a research topic.",
     input_schema: {
       type: "object",
       properties: {
-        query: { type: "string", description: "The search query." },
+        query: {
+          type: "string",
+          description: "The search query.",
+        },
         count: {
           type: "integer",
           description: "Number of results to return (1-10). Defaults to 5.",
@@ -23,12 +28,15 @@ export const TOOLS = [
   {
     name: "summarizer",
     description:
-      "Summarize a block of text (e.g. search result snippets) into concise key bullet points. " +
+      "Summarize a block of text, such as ranked search result snippets, into concise key bullet points. " +
       "Always run collected search results through this before writing a report.",
     input_schema: {
       type: "object",
       properties: {
-        text: { type: "string", description: "The text to summarize." },
+        text: {
+          type: "string",
+          description: "The text to summarize.",
+        },
         topic: {
           type: "string",
           description: "Optional research topic to focus the summary on.",
@@ -40,8 +48,8 @@ export const TOOLS = [
   {
     name: "report_writer",
     description:
-      "Write a structured Markdown research report (Executive Summary, Key Findings, Sources, " +
-      "Next Steps) and save it to reports/YYYY-MM-DD-{topic}.md.",
+      "Write a structured Markdown research report with Executive Summary, Key Findings, Sources, " +
+      "and Next Steps, then save it to reports/YYYY-MM-DD-{topic}.md.",
     input_schema: {
       type: "object",
       properties: {
@@ -51,7 +59,7 @@ export const TOOLS = [
         },
         executive_summary: {
           type: "string",
-          description: "A short (2-4 sentence) executive summary of the findings.",
+          description: "A short 2-4 sentence executive summary of the findings.",
         },
         key_findings: {
           type: "string",
@@ -59,7 +67,8 @@ export const TOOLS = [
         },
         sources: {
           type: "string",
-          description: "Markdown-formatted list of sources/URLs used.",
+          description:
+            "Markdown-formatted list of sources/URLs used. Include citation quality labels when available.",
         },
         next_steps: {
           type: "string",
@@ -71,12 +80,14 @@ export const TOOLS = [
   },
 ];
 
-export async function runTool(name, input) {
+async function executeTool(name, input) {
   switch (name) {
     case "web_search":
       return webSearch(input.query, input.count);
+
     case "summarizer":
       return summarize(input.text, input.topic);
+
     case "report_writer":
       return writeReport({
         topic: input.topic,
@@ -85,7 +96,51 @@ export async function runTool(name, input) {
         sources: input.sources,
         nextSteps: input.next_steps,
       });
+
     default:
       return `Unknown tool: ${name}`;
+  }
+}
+
+export async function runTool(name, input = {}) {
+  const callId = randomUUID();
+  const startedAtDate = new Date();
+  const startedAt = startedAtDate.toISOString();
+
+  try {
+    const output = await executeTool(name, input);
+    const finishedAtDate = new Date();
+    const finishedAt = finishedAtDate.toISOString();
+
+    await logToolCall({
+      callId,
+      toolName: name,
+      status: "success",
+      startedAt,
+      finishedAt,
+      durationMs: finishedAtDate - startedAtDate,
+      input,
+      output,
+      error: null,
+    });
+
+    return output;
+  } catch (err) {
+    const finishedAtDate = new Date();
+    const finishedAt = finishedAtDate.toISOString();
+
+    await logToolCall({
+      callId,
+      toolName: name,
+      status: "error",
+      startedAt,
+      finishedAt,
+      durationMs: finishedAtDate - startedAtDate,
+      input,
+      output: null,
+      error: err.message,
+    });
+
+    return `Error: tool "${name}" failed (${err.message})`;
   }
 }

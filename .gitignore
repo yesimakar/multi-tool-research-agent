@@ -6,6 +6,9 @@ node_modules/
 .env.*
 !.env.example
 
+# Tool trace logs
+logs/
+
 # Runtime output
 reports/*
 !reports/.gitkeep
