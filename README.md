@@ -36,24 +36,24 @@ This project demonstrates several production-relevant AI engineering patterns:
 
 ```mermaid
 flowchart LR
-    User[Research Topic] --> Agent[agent.js<br/>Agent Orchestrator]
+    A["Research topic"] --> B["agent.js - Agent orchestrator"]
 
-    Agent --> Claude[Claude Tool-Calling Model]
-    Claude --> Registry[tools/index.js<br/>Tool Registry]
+    B --> C["Claude tool-calling model"]
+    C --> D["tools/index.js - Tool registry"]
 
-    Registry --> Search[webSearch.js<br/>Web Search]
-    Registry --> Summarizer[summarizer.js<br/>Summarization]
-    Registry --> Writer[reportWriter.js<br/>Report Writer]
+    D --> E["webSearch.js - Web search"]
+    D --> F["summarizer.js - Summarization"]
+    D --> G["reportWriter.js - Report writer"]
 
-    Search --> DuckDuckGo[DuckDuckGo<br/>Instant Answer API]
-    DuckDuckGo --> Search
+    E --> H["DuckDuckGo Instant Answer API"]
+    H --> E
 
-    Search --> Summarizer
-    Summarizer --> Writer
-    Writer --> Report[reports/YYYY-MM-DD-topic-slug.md]
+    E --> F
+    F --> G
+    G --> I["Markdown report in reports folder"]
 
-    Report --> Agent
-    Agent --> Console[Final Console Response]
+    I --> B
+    B --> J["Final console response"]
 ```
 
 ---
